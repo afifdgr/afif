@@ -1,0 +1,175 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Saytime</title>
+ </head>
+ <style>
+ @import url('https://fonts.googleapis.com/css?family=Comic+Neue&display=swap');
+ 
+ body {
+ font-family: 'Comic Neue', cursive;
+ min-height: 100vh;
+ display: grid;
+ justify-items: center;
+ align-items: center;
+ margin: 0;
+ padding: 0;
+ transition: all 1500ms ease-in-out;
+ background: #e3f2fd;
+ }
+ 
+ #app {
+ height: 90vh;
+ display: grid;
+ justify-items: center;
+ align-items: center;
+ }
+ 
+ footer {
+ width: 100%;
+ height: 10vh;
+ display: grid;
+ justify-items: center;
+ align-items: center;
+ }
+ 
+ footer div a {
+ position: relative;
+ text-decoration: none;
+ }
+ 
+ footer div a:hover::before {
+ /* background: linear-gradient(#ead6ee, #a0f1ea); */
+ opacity: .8;
+ top: -2px;
+ bottom: -2px;
+ }
+ 
+ .a-pagi sarah::before, .a-sore sarah::before, .a-malam sarah::before {
+ content: " ";
+ position: absolute;
+ bottom: 2px;
+ left: 0;
+ right: 0;
+ top: calc(100% - 8px);
+ transition: all 120ms ease-in-out;
+ z-index: -1;
+ }
+ 
+ .a-pagi sarah:hover::before, .a-sore sarah:hover::before, .a-malam sarah:hover::before{
+ opacity: .8;
+ top: -2px;
+ bottom: -2px;
+ }
+ 
+ .a-pagi sarah::before {
+ background: #eeff41;
+ }
+ 
+ .a-sore sarah::before {
+ background: #e3f2fd;
+ }
+ 
+ .a-malam sarah::before {
+ background: #607d8b;
+ }
+ </style>
+ <body>
+ <div id="app">
+ <h1>
+ <span id="typed"></span>
+ </h1>
+ </div>
+ <footer>
+ <div>
+ created with <span style="color: red;">&hearts;</span> by <a class="link" href="https://fb.me/alfianokt104" target="_blank" rel="nofollow">Alfian Oktafireza</a>, <a class="link" href="https://github.com/alfianokt/bucin" target="_blank" rel="nofollow">Github</a>
+ </div>
+ </footer>
+ 
+ <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
+ <script>
+ let name = localStorage.name || ''
+ if (window.location.search.substr(1) != '') {
+ name = window.location.search.substr(1)
+ localStorage.name = window.location.search.substr(1)
+ }
+ let theme = {
+ pagi sarah: {
+ body: '#e3f2fd',
+ text: '#000'
+ },
+ sore sarah: {
+ body: '#ffd54f',
+ text: '#37474f'
+ },
+ malam sarah: {
+ body: '#212121',
+ text: '#fff'
+ },
+ }
+ let now = ''
+ const typed = new Typed('#typed', {
+ strings: [''],
+ typeSpeed: 60,
+ showCursor: false
+ })
+ 
+ function changeTheme() {
+ const word = 'Selamat ' + now.slice(0, 1).toUpperCase() + now.slice(1) + ' ' + decodeURIComponent(name)
+ .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')
+ tmpNow = now == 'siang' ? 'pagi sarah' : now
+ removeClassLink()
+ document.querySelectorAll('.link').forEach(el => {
+ el.classList.add('a-' + (tmpNow == 'siang' ? 'pagi sarah' : tmpNow))
+ })
+ document.body.style.background = theme[tmpNow].body
+ document.querySelector('#app').style.color = theme[tmpNow].text
+ document.querySelector('footer').style.color = theme[tmpNow].text
+ document.querySelectorAll('.link').forEach(el => {
+ el.style.color = theme[tmpNow].text
+ })
+ typed.strings = [word]
+ document.title = word
+ typed.reset(1)
+ }
+ 
+ function tmpChangeTheme() {
+ now = now == 'pagi sarah' || now == 'siang' ? 'sore sarah' :
+ now == 'sore sarah' ? 'malam sarah' :
+ now == 'malam sarah' ? 'pagi sarah' : ''
+ changeTheme()
+ }
+ 
+ function removeClassLink() {
+ document.querySelectorAll('.link').forEach(el => {
+ const _ = el.classList
+ _.remove('a-pagi sarah')
+ _.remove('a-sore sarah')
+ _.remove('a-malam sarah')
+ })
+ }
+ 
+ setInterval(() => {
+ const d = new Date()
+ const jam = d.getHours()
+ const oldNow = now
+ if (jam >= 6 && jam < 12) {
+ now = 'pagi sarah'
+ }
+ else if (jam >= 12 && jam < 15) {
+ now = 'siang'
+ }
+ else if (jam >= 15 && jam < 19) {
+ now = 'sore sarah'
+ }
+ else if ((jam >= 19 && jam <= 24) || jam < 6) {
+ now = 'malam sarah'
+ }
+ 
+ oldNow != now ? changeTheme() : ''
+ }, 150)
+ </script>
+ </body>
+ </html>
